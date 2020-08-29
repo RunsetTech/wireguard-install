@@ -120,7 +120,7 @@ CLIENT_DNS="1.1.1.1"
     SERVER_PUBKEY=$( echo $SERVER_PRIVKEY | wg pubkey )
     CLIENT_PRIVKEY=$( wg genkey )
     CLIENT_PUBKEY=$( echo $CLIENT_PRIVKEY | wg pubkey )
-    CLIENT_ADDRESS="${PRIVATE_SUBNET::-4}3"
+    CLIENT_ADDRESS="${PRIVATE_SUBNET::-3}3"
 
     mkdir -p /etc/wireguard
     touch $WG_CONFIG && chmod 600 $WG_CONFIG
