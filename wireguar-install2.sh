@@ -42,10 +42,12 @@ if [ "$( systemd-detect-virt )" == "openvz" ]; then
     exit
 fi
 
+IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+
 if [ ! -f "$WG_CONFIG" ]; then
     ### Install server and add default client
     INTERACTIVE=${INTERACTIVE:-yes}
-    PRIVATE_SUBNET=${PRIVATE_SUBNET:-"10.9.0.0/8"}
+    PRIVATE_SUBNET=${PRIVATE_SUBNET:-"10.0.0.0/8"}
     PRIVATE_SUBNET_MASK=$( echo $PRIVATE_SUBNET | cut -d "/" -f 2 )
     GATEWAY_ADDRESS="${PRIVATE_SUBNET::-4}1"
 
@@ -59,30 +61,36 @@ if [ ! -f "$WG_CONFIG" ]; then
             fi
         fi
     fi
+    
+    SERVER_HOST=$IP
 
-    if [ "$SERVER_PORT" == "" ]; then
-        SERVER_PORT=$( get_free_udp_port )
-    fi
+#     if [ "$SERVER_PORT" == "" ]; then
+#         SERVER_PORT=$( get_free_udp_port )
+#     fi
 
-    if [ "$CLIENT_DNS" == "" ]; then
-        echo "Which DNS do you want to use with the VPN?"
-        echo "   1) Cloudflare"
-        echo "   2) Google"
-        echo "   3) OpenDNS"
-        read -p "DNS [1-3]: " -e -i 1 DNS_CHOICE
+SERVER_PORT=6764
 
-        case $DNS_CHOICE in
-            1)
-            CLIENT_DNS="1.1.1.1,1.0.0.1"
-            ;;
-            2)
-            CLIENT_DNS="8.8.8.8,8.8.4.4"
-            ;;
-            3)
-            CLIENT_DNS="208.67.222.222,208.67.220.220"
-            ;;
-        esac
-    fi
+#     if [ "$CLIENT_DNS" == "" ]; then
+#         echo "Which DNS do you want to use with the VPN?"
+#         echo "   1) Cloudflare"
+#         echo "   2) Google"
+#         echo "   3) OpenDNS"
+#         read -p "DNS [1-3]: " -e -i 1 DNS_CHOICE
+
+#         case $DNS_CHOICE in
+#             1)
+#             CLIENT_DNS="1.1.1.1,1.0.0.1"
+#             ;;
+#             2)
+#             CLIENT_DNS="8.8.8.8,8.8.4.4"
+#             ;;
+#             3)
+#             CLIENT_DNS="208.67.222.222,208.67.220.220"
+#             ;;
+#         esac
+#     fi
+
+CLIENT_DNS="1.1.1.1"
 
     if [ "$CLIENT_NAME" == "" ]; then
         read -p "Tell me a name for the client config file. Use one word only, no special characters: " -e -i "client" CLIENT_NAME
