@@ -44,6 +44,8 @@ fi
 
 IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
+SERVER_HOST=$IP
+
 if [ ! -f "$WG_CONFIG" ]; then
     ### Install server and add default client
     INTERACTIVE=${INTERACTIVE:-yes}
@@ -62,7 +64,7 @@ if [ ! -f "$WG_CONFIG" ]; then
         fi
     fi
     
-    SERVER_HOST=$IP
+    
 
 #     if [ "$SERVER_PORT" == "" ]; then
 #         SERVER_PORT=$( get_free_udp_port )
